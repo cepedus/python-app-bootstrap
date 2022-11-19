@@ -1,0 +1,17 @@
+{
+  "version": "0.2",
+  "files": ["**/*.{txt,md,py,yaml,yml,json}"],
+  "dictionaryDefinitions": [
+    {
+      "name": "english-extra",
+      "path": ".cspell-dictionaries/english-extra.txt",
+      "addWords": true
+    },
+    {
+      "name": "python",
+      "path": ".cspell-dictionaries/python.txt",
+      "addWords": true
+    }
+  ],
+  "dictionaries": ["en", "english-extra", "python"]
+}

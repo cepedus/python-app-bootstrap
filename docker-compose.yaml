@@ -1,0 +1,34 @@
+services:
+  app-server:
+    container_name: app-server
+    image: app-server
+    restart: always
+    working_dir: /opt/program
+    command:
+      - --reload
+    ports:
+      - 5001:5001
+    volumes:
+      - ./server/:/opt/program/server
+    depends_on:
+      - app-mongo
+    networks:
+      - common_net
+    env_file:
+      - ./.env
+    build: 
+      context: ./
+      dockerfile: ./Dockerfile
+
+  app-mongo:
+    container_name: app-mongo
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    networks:
+      - common_net
+
+networks:
+  common_net:
+    name: common_net

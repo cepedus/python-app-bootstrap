@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "app"
+version = "0.1.0"
+description = ""
+authors = ["Martín Cepeda <mocepeda@uc.cl>"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.79.0"
+uvicorn = { extras = ["standard"], version = "^0.18.2" }
+
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^0.991"
+pytest-asyncio = "^0.20.2"
+pytest = "^7.2.0"
+pylint = "^2.15.6"
+pytest-mock = "^3.10.0"
+pyclean = "^2.2.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

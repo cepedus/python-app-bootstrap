@@ -1,0 +1,9 @@
+# MacOS
+.DS_Store
+
+__pycache__/
+.venv/
+*_cache/
+*.log
+*.env
+
