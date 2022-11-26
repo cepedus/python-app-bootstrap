@@ -74,13 +74,18 @@ python-clean:
 app-build:
 	@echo "Building Server image: $(APP_DOCKER_IMAGE)"
 	@docker buildx bake  -f docker-compose.yaml \
-	--set $(APP_DOCKER_IMAGE).args.PYTHON_DOCKER_IMAGE=$(PYTHON_DOCKER_IMAGE)
+	--set $(APP_DOCKER_IMAGE).args.PYTHON_DOCKER_IMAGE=$(PYTHON_DOCKER_IMAGE) 
+
 app-run: config app-build
 	@docker-compose up --force-recreate --remove-orphans
 
 app-ci: lint typecheck test
 
 
+clean-docker:
+	@echo "🧹 Cleaning Docker cache..."
+	@docker system prune --volumes --all --force >/dev/null || true
+
 # Global
-clean: confirm python-clean clean-poetry
+clean: confirm python-clean clean-poetry clean-docker
 	@echo "✨ All clean"
