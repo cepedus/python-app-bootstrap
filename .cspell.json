@@ -1,7 +1,7 @@
 {
   "version": "0.2",
   "files": ["**/*.{txt,md,py,yaml,yml,json}"],
-  "ignoreRegExpList": ["r\".+$"],
+  "ignoreRegExpList": ["r\".+\"$"],
   "dictionaryDefinitions": [
     {
       "name": "english-extra",
