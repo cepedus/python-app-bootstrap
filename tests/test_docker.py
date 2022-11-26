@@ -17,17 +17,17 @@ def test_file_uniqueness() -> None:
     # File uniqueness
     if len(DOCKERFILE_PATHS) != 1:
         raise ValueError(
-            f"Found more than one 'Dockerfile*': {', '.join(str(p) for p in DOCKERFILE_PATHS) }"
+            f"Found not only one 'Dockerfile*': {', '.join(str(p) for p in DOCKERFILE_PATHS) }"
         )
 
     if len(DOCKER_COMPOSE_PATHS) != 1:
         raise ValueError(
-            "Found more than one 'docker-compose.yaml':"
+            "Found not only one 'docker-compose.yaml':"
             f" {', '.join(str(p) for p in DOCKERFILE_PATHS) }"
         )
     if len(ENV_SAMPLE_PATHS) != 1:
         raise ValueError(
-            f"Found more than one '.env.sample': {', '.join(str(p) for p in ENV_SAMPLE_PATHS) }"
+            f"Found not only one '.env.sample': {', '.join(str(p) for p in ENV_SAMPLE_PATHS) }"
         )
 
 

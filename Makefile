@@ -1,12 +1,12 @@
 PROJECT_NAME=app
-PYTHON_MAJOR_VERSION=3.11
+PYTHON_MINOR_VERSION=3.11
 
 # CI variables
 CI_EXCLUDED_DIRS = __pycache__
 CI_DIRECTORIES=$(filter-out $(CI_EXCLUDED_DIRS), $(foreach dir, $(dir $(wildcard */)), $(dir:/=)))
 
 # Container variables
-PYTHON_DOCKER_IMAGE=python:${PYTHON_MAJOR_VERSION}-slim
+PYTHON_DOCKER_IMAGE=python:${PYTHON_MINOR_VERSION}-slim
 APP_DOCKER_IMAGE=$(PROJECT_NAME)-server
 
 
@@ -30,9 +30,9 @@ ifneq ($(POETRY_AVAILABLE), 1)
 endif
 	@poetry check --no-ansi --quiet
 	@echo "✅ Poetry is installed"
-	@echo "💡 Using Python $(PYTHON_MAJOR_VERSION)"
+	@echo "💡 Using Python $(PYTHON_MINOR_VERSION)"
 	@poetry config virtualenvs.in-project true
-	@poetry env use $(PYTHON_MAJOR_VERSION) --quiet
+	@poetry env use $(PYTHON_MINOR_VERSION) --quiet
 
 setup-poetry:
 	@echo "⏳ Installing Poetry..."

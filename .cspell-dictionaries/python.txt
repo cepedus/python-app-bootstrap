@@ -11,6 +11,7 @@ mypy
 passlib
 pathlib
 pylint
+PYPROJECT
 pytest
 redoc
 uvicorn
