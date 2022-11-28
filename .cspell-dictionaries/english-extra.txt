@@ -1,3 +1,4 @@
+bytecode
 Coloc
 colocs
 dotenv

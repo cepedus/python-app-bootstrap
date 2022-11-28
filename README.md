@@ -10,8 +10,9 @@ This repository contains the setup, configuration and `make` targets to develop 
 *Assuming you have an Unix shell with [`make`](https://www.gnu.org/software/make/) and [`curl`](https://curl.se/)*
 
 
-- A Python 3 executable of your choice: install using the [official installers](https://www.python.org/downloads/), [brew](https://brew.sh/), [conda](https://docs.conda.io/en/latest/miniconda.html), [mamba](https://mamba.readthedocs.io/en/latest/index.html), etc.
-- This repository works by default with Python `3.11`. Details are provided on how to change this on the sections below
+- This repository works by default with Python `3.11`. Details are provided on how to change this on the sections below.
+- A Python 3.11 executable of your choice: install using the [official installers](https://www.python.org/downloads/), [brew](https://brew.sh/), using [conda](https://docs.conda.io/en/latest/miniconda.html), [mamba](https://mamba.readthedocs.io/en/latest/index.html) environments, etc.
+
 
 **🥾 Want to setup a Poetry-managed replicable environment?**
 ```bash
@@ -49,10 +50,20 @@ You're wondering what those 3 commands actually *do*. The main control over the 
 - Server framework: [FastAPI](https://fastapi.tiangolo.com/)
 - Container deployment: [Docker](https://docs.docker.com/get-started/overview/)
 
---- 
-***⚠️ Sections below are a Work in Progress***
+The package-specific configurations are gathered on a single TOML file (Poetry, mypy, pylint and isort). In particular we use:
+- Pytorch's [`mypy-strict.ini`](https://github.com/pytorch/pytorch/blob/master/mypy-strict.ini) rules
+- Minimal [disable](https://github.com/cepedus/poetry-bootstrap/blob/main/pyproject.toml#L419) rules for pylint (no docstring whatsoever => keep your code as clean as possible!)
+- Strict `asyncio` mode for pytest.
 
 ### Dissecting [Makefile](./Makefile)
+
+- A single entrypoint for changing your build defining `PYTHON_MINOR_VERSION=3.11`
+- `init` installs Poetry using the official installer (if not present on your system), creates a project-specific virtual environment and installs the dependencies of your [`.lock`](poetry.lock) file.
+- `app-ci` launches pylint, mypy and pytest on your source code.
+- `app-run` builds and deploys locally your app. The 2 services (app and database) are launched on the same virtual network.
+- `clean` clears bytecode, poetry/pip caches and Docker cache, dangling images and volumes. Use with caution.
+
+***⚠️ Sections below are a Work in Progress***
 
 ## 👀 What are the extra files?
 
