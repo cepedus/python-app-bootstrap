@@ -1,12 +1,14 @@
+include .pythonrc
+PYTHON_VERSION?=
+PYTHON_CURRENT_VERSION := $(shell python --version | cut -d " " -f 2)
 PROJECT_NAME=app
-PYTHON_MINOR_VERSION=3.11
 
 # CI variables
 CI_EXCLUDED_DIRS = __pycache__
 CI_DIRECTORIES=$(filter-out $(CI_EXCLUDED_DIRS), $(foreach dir, $(dir $(wildcard */)), $(dir:/=)))
 
 # Container variables
-PYTHON_DOCKER_IMAGE=python:${PYTHON_MINOR_VERSION}-slim
+PYTHON_DOCKER_IMAGE=python:${PYTHON_VERSION}-slim
 APP_DOCKER_IMAGE=$(PROJECT_NAME)-server
 
 
@@ -14,25 +16,34 @@ APP_DOCKER_IMAGE=$(PROJECT_NAME)-server
 confirm:
 	@echo "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
 
-exists-%: 
+exists-%:
 	@which "$*" > /dev/null && echo 1 || echo 0
 
-config:
+config: check-python-env
 	@cp -n .env.sample .env || true
+
+print-%: ; @echo $* = $($*)
+
+check-python-env:
+	@if [ "$(PYTHON_VERSION)" == "" ] || [ "$(PYTHON_VERSION)" != "$(PYTHON_CURRENT_VERSION)" ]; \
+		then echo "The PYTHON_VERSION env variable must be set in .pythonrc and must be the same as the local Python environment before running this command" && exit 1;\
+	fi
+
 
 
 # Poetry
 POETRY_AVAILABLE := $(shell which poetry > /dev/null && echo 1 || echo 0)
 
-init:
+
+init: check-python-env
 ifneq ($(POETRY_AVAILABLE), 1)
 	@make setup-poetry
 endif
 	@poetry check --no-ansi --quiet
 	@echo "✅ Poetry is installed"
-	@echo "💡 Using Python $(PYTHON_MINOR_VERSION)"
+	@echo "💡 Using Python $(PYTHON_CURRENT_VERSION)"
 	@poetry config virtualenvs.in-project true
-	@poetry env use $(PYTHON_MINOR_VERSION) --quiet
+	@poetry env use $(PYTHON_CURRENT_VERSION) --quiet
 
 setup-poetry:
 	@echo "⏳ Installing Poetry..."
@@ -71,7 +82,7 @@ python-clean:
 	@poetry run pyclean . --quiet
 
 # App
-app-build:
+app-build: check-python-env
 	@echo "Building Server image: $(APP_DOCKER_IMAGE)"
 	@docker buildx bake  -f docker-compose.yaml \
 	--set $(APP_DOCKER_IMAGE).args.PYTHON_DOCKER_IMAGE=$(PYTHON_DOCKER_IMAGE) 

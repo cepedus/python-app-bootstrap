@@ -34,6 +34,7 @@ make app-run
 - [Poetry-FastAPI bootstrap template](#poetry-fastapi-bootstrap-template)
   - [🪄 The magic tricks](#-the-magic-tricks)
     - [Dissecting Makefile](#dissecting-makefile)
+    - [Dissecting .pythonrc](#dissecting-pythonrc)
   - [👀 What are the extra files?](#-what-are-the-extra-files)
     - [Dissecting Dockerfile](#dissecting-dockerfile)
     - [Dissecting docker-compose.yaml](#dissecting-docker-composeyaml)
@@ -57,11 +58,15 @@ The package-specific configurations are gathered on a single TOML file (Poetry, 
 
 ### Dissecting [Makefile](./Makefile)
 
-- A single entrypoint for changing your build defining `PYTHON_MINOR_VERSION=3.11`
 - `init` installs Poetry using the official installer (if not present on your system), creates a project-specific virtual environment and installs the dependencies of your [`.lock`](poetry.lock) file.
 - `app-ci` launches pylint, mypy and pytest on your source code.
 - `app-run` builds and deploys locally your app. The 2 services (app and database) are launched on the same virtual network.
 - `clean` clears bytecode, poetry/pip caches and Docker cache, dangling images and volumes. Use with caution.
+
+### Dissecting [.pythonrc](./.pythonrc)
+
+- A single entrypoint for changing your build defining, for example, `PYTHON_VERSION=3.11.0`
+
 
 ***⚠️ Sections below are a Work in Progress***
 

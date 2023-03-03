@@ -7,9 +7,10 @@ CURRENT_MINOR_VERSION = ".".join(python_version().split(".")[:2])
 TEST_FILE_PATH = pathlib.Path(__file__).parent.resolve()
 PYPROJECT_TOML_PATH = list(TEST_FILE_PATH.glob("../pyproject.toml"))
 MAKEFILE_PATH = list(TEST_FILE_PATH.glob("../Makefile"))
+PYTHONRC_PATH = list(TEST_FILE_PATH.glob("../.pythonrc"))
 
 
-MAKEFILE_VERSION_REGEX = r"PYTHON_MINOR_VERSION=(\S+)"
+PYTHONRC_VERSION_REGEX = r"PYTHON_VERSION=(\S+)"
 PYPROJECT_TOML_VERSION_REGEX = r"\n((?:py(?:thon)?)(?:[_-]version)?)\s=\D+(\d+.\d+)"
 
 
@@ -17,31 +18,36 @@ def test_file_uniqueness() -> None:
     # File uniqueness
     if len(PYPROJECT_TOML_PATH) != 1:
         raise ValueError(
-            "Found not only one 'pyproject.toml':"
+            "Found more than one 'pyproject.toml':"
             f" {', '.join(str(p) for p in PYPROJECT_TOML_PATH) }"
         )
 
     if len(MAKEFILE_PATH) != 1:
         raise ValueError(
-            f"Found not only one 'Makefile': {', '.join(str(p) for p in MAKEFILE_PATH) }"
+            f"Found more than one 'Makefile': {', '.join(str(p) for p in MAKEFILE_PATH) }"
+        )
+
+    if len(PYTHONRC_PATH) != 1:
+        raise ValueError(
+            f"Found more than one '.pythonrc': {', '.join(str(p) for p in MAKEFILE_PATH) }"
         )
 
 
 def test_consistent_versioning() -> None:
     with open(PYPROJECT_TOML_PATH[0], encoding="utf-8", mode="r") as f:
         pyproject_toml = f.read()
-    with open(MAKEFILE_PATH[0], encoding="utf-8", mode="r") as f:
-        makefile = f.read()
+    with open(PYTHONRC_PATH[0], encoding="utf-8", mode="r") as f:
+        pythonrc = f.read()
 
     # Makefile env var for building containers
-    makefile_python_version = re.findall(MAKEFILE_VERSION_REGEX, makefile)
-    if makefile_python_version is None:
-        raise ValueError(f"'PYTHON_MINOR_VERSION' not specified on '{MAKEFILE_PATH[0]}'")
+    pythonrc_python_version = re.findall(PYTHONRC_VERSION_REGEX, pythonrc)
+    if pythonrc_python_version is None:
+        raise ValueError(f"'PYTHON_VERSION' not specified on '{MAKEFILE_PATH[0]}'")
 
-    if makefile_python_version[0] != CURRENT_MINOR_VERSION:
+    if pythonrc_python_version[0] != python_version():
         raise ValueError(
-            f"Inconsistent versioning on Makefile ({makefile_python_version[0]}) and running script"
-            f" ({CURRENT_MINOR_VERSION})"
+            f"Inconsistent versioning on .pythonrc ({pythonrc_python_version[0]})"
+            f" and running script ({CURRENT_MINOR_VERSION})"
         )
 
     # TOML configurations
