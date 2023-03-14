@@ -1,6 +1,8 @@
 include .pythonrc
 PYTHON_VERSION?=
 PYTHON_CURRENT_VERSION := $(shell python --version | cut -d " " -f 2)
+POETRY_AVAILABLE := $(shell which poetry > /dev/null && echo 1 || echo 0)
+
 PROJECT_NAME=app
 
 # CI variables
@@ -10,7 +12,6 @@ CI_DIRECTORIES=$(filter-out $(CI_EXCLUDED_DIRS), $(foreach dir, $(dir $(wildcard
 # Container variables
 PYTHON_DOCKER_IMAGE=python:${PYTHON_VERSION}-slim
 APP_DOCKER_IMAGE=$(PROJECT_NAME)-server
-
 
 # Project targets
 confirm:
@@ -28,12 +29,6 @@ check-python-env:
 	@if [ "$(PYTHON_VERSION)" == "" ] || [ "$(PYTHON_VERSION)" != "$(PYTHON_CURRENT_VERSION)" ]; \
 		then echo "The PYTHON_VERSION env variable must be set in .pythonrc and must be the same as the local Python environment before running this command" && exit 1;\
 	fi
-
-
-
-# Poetry
-POETRY_AVAILABLE := $(shell which poetry > /dev/null && echo 1 || echo 0)
-
 
 init: check-python-env
 ifneq ($(POETRY_AVAILABLE), 1)
