@@ -59,7 +59,8 @@ clean-poetry:
 # CI targets 
 lint-%:
 	@echo lint-"$*"
-	@find "$*" -name '*.py' | xargs poetry run pylint
+	@find "$*" -name '*.py' | xargs poetry run ruff
+	@echo "    ✅ All good"
 
 lint: $(addprefix lint-, $(CI_DIRECTORIES))
 
@@ -72,9 +73,6 @@ typecheck: $(addprefix typecheck-, $(CI_DIRECTORIES))
 test:
 	@poetry run pytest --rootdir ./  --cache-clear tests
 
-python-clean:
-	@echo "🧹 Cleaning Python bytecode..."
-	@poetry run pyclean . --quiet
 
 # App
 app-build: check-python-env
@@ -92,6 +90,13 @@ clean-docker:
 	@echo "🧹 Cleaning Docker cache..."
 	@docker system prune --volumes --all --force >/dev/null || true
 
+python-clean:
+	@echo "🧹 Cleaning Python bytecode..."
+	@poetry run pyclean . --quiet
+
+clean-cache:
+	@echo "🧹 Cleaning cache..."
+	@find . -regex ".*_cache" -type d -print0|xargs -0 rm -r --
 # Global
-clean: confirm python-clean clean-poetry clean-docker
+clean: confirm clean-cache python-clean clean-poetry clean-docker
 	@echo "✨ All clean"

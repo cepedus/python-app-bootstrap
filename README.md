@@ -7,14 +7,14 @@ This repository contains the setup, configuration and `make` targets to develop 
 
 **🚦 Requirements**
 
-*Assuming you have an Unix shell with [`make`](https://www.gnu.org/software/make/) and [`curl`](https://curl.se/)*
+*Assuming you have a Unix shell with [`make`](https://www.gnu.org/software/make/) and [`curl`](https://curl.se/)*
 
 
 - This repository works by default with Python `3.11`. Details are provided on how to change this on the sections below.
 - A Python 3.11 executable of your choice: install using the [official installers](https://www.python.org/downloads/), [brew](https://brew.sh/), using [conda](https://docs.conda.io/en/latest/miniconda.html), [mamba](https://mamba.readthedocs.io/en/latest/index.html) environments, etc.
 
 
-**🥾 Want to setup a Poetry-managed replicable environment?**
+**🥾 Want to set up a Poetry-managed replicable environment?**
 ```bash
 make init
 ```
@@ -51,7 +51,7 @@ You're wondering what those 3 commands actually *do*. The main control over the 
 - Server framework: [FastAPI](https://fastapi.tiangolo.com/)
 - Container deployment: [Docker](https://docs.docker.com/get-started/overview/)
 
-The package-specific configurations are gathered on a single TOML file (Poetry, mypy, pylint and isort). In particular we use:
+The package-specific configurations are gathered on a single TOML file (Poetry, mypy, pylint and isort). In particular, we use:
 - Pytorch's [`mypy-strict.ini`](https://github.com/pytorch/pytorch/blob/master/mypy-strict.ini) rules
 - Minimal [disable](https://github.com/cepedus/poetry-bootstrap/blob/main/pyproject.toml#L419) rules for pylint (no docstring whatsoever => keep your code as clean as possible!)
 - Strict `asyncio` mode for pytest.
@@ -92,4 +92,4 @@ Also, with the right building blocks is easier to follow coding good practices a
 
 ### ➡️ What's missing
 - Repository configuration: direct commits to the main branch are forbidden, only possible to do so through PRs.
-- Github Actions: workflows to CI check each commit to the main branch and on PRs.
+- GitHub Actions: workflows to CI check each commit to the main branch and on PRs.
