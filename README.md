@@ -34,7 +34,7 @@ make app-run
 - [Poetry-FastAPI bootstrap template](#poetry-fastapi-bootstrap-template)
   - [🪄 The magic tricks](#-the-magic-tricks)
     - [Dissecting Makefile](#dissecting-makefile)
-    - [Dissecting .pythonrc](#dissecting-pythonrc)
+    - [Dissecting .python-version](#dissecting-pythonrc)
   - [👀 What are the extra files?](#-what-are-the-extra-files)
     - [Dissecting Dockerfile](#dissecting-dockerfile)
     - [Dissecting docker-compose.yaml](#dissecting-docker-composeyaml)
@@ -63,7 +63,7 @@ The package-specific configurations are gathered on a single TOML file (Poetry, 
 - `app-run` builds and deploys locally your app. The 2 services (app and database) are launched on the same virtual network.
 - `clean` clears bytecode, poetry/pip caches and Docker cache, dangling images and volumes. Use with caution.
 
-### Dissecting [.pythonrc](./.pythonrc)
+### Dissecting [.python-version](./.python-version)
 
 - A single entrypoint for changing your build defining, for example, `PYTHON_VERSION=3.11.0`
 

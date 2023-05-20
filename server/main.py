@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import FastAPI
 
@@ -6,5 +6,5 @@ app = FastAPI()
 
 
 @app.get("/")
-async def root() -> Dict[str, Any]:
+async def root() -> dict[str, Any]:
     return {"message": "Hello World"}

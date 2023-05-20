@@ -7,7 +7,7 @@ CURRENT_MINOR_VERSION = ".".join(python_version().split(".")[:2])
 TEST_FILE_PATH = pathlib.Path(__file__).parent.resolve()
 PYPROJECT_TOML_PATH = list(TEST_FILE_PATH.glob("../pyproject.toml"))
 MAKEFILE_PATH = list(TEST_FILE_PATH.glob("../Makefile"))
-PYTHONRC_PATH = list(TEST_FILE_PATH.glob("../.pythonrc"))
+PYTHONRC_PATH = list(TEST_FILE_PATH.glob("../.python-version"))
 
 
 PYTHONRC_VERSION_REGEX = r"PYTHON_VERSION=(\S+)"
@@ -29,7 +29,7 @@ def test_file_uniqueness() -> None:
 
     if len(PYTHONRC_PATH) != 1:
         raise ValueError(
-            f"Found more than one '.pythonrc': {', '.join(str(p) for p in MAKEFILE_PATH) }"
+            f"Found more than one '.python-version': {', '.join(str(p) for p in MAKEFILE_PATH) }"
         )
 
 
@@ -37,16 +37,16 @@ def test_consistent_versioning() -> None:
     with open(PYPROJECT_TOML_PATH[0], encoding="utf-8", mode="r") as f:
         pyproject_toml = f.read()
     with open(PYTHONRC_PATH[0], encoding="utf-8", mode="r") as f:
-        pythonrc = f.read()
+        python_version_content = f.read()
 
     # Makefile env var for building containers
-    pythonrc_python_version = re.findall(PYTHONRC_VERSION_REGEX, pythonrc)
+    pythonrc_python_version = re.sub(r"\s+", "", python_version_content)
     if pythonrc_python_version is None:
         raise ValueError(f"'PYTHON_VERSION' not specified on '{MAKEFILE_PATH[0]}'")
 
-    if pythonrc_python_version[0] != python_version():
+    if pythonrc_python_version != python_version():
         raise ValueError(
-            f"Inconsistent versioning on .pythonrc ({pythonrc_python_version[0]})"
+            f"Inconsistent versioning on .python-version ({pythonrc_python_version[0]})"
             f" and running script ({CURRENT_MINOR_VERSION})"
         )
 
