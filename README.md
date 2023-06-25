@@ -1,7 +1,7 @@
 # Poetry-FastAPI bootstrap template
 > *Author: [cepedus](https://www.github.com/cepedus)*
 
-> *README version:* 2022-11-26
+> *README version:* 2023-06-25
 
 This repository contains the setup, configuration and `make` targets to develop and deploy the simplest FastAPI app, providing scalable utils to type-check, lint and test your code.
 
@@ -11,7 +11,7 @@ This repository contains the setup, configuration and `make` targets to develop 
 
 
 - This repository works by default with Python `3.11`. Details are provided on how to change this on the sections below.
-- A Python 3.11 executable of your choice: install using the [official installers](https://www.python.org/downloads/), [brew](https://brew.sh/), using [conda](https://docs.conda.io/en/latest/miniconda.html), [mamba](https://mamba.readthedocs.io/en/latest/index.html) environments, etc.
+- A Python 3.11 executable of your choice: install using [pyenv](https://github.com/pyenv/pyenv), [official installers](https://www.python.org/downloads/), [brew](https://brew.sh/), [conda](https://docs.conda.io/en/latest/miniconda.html), [mamba](https://mamba.readthedocs.io/en/latest/index.html), etc.
 
 
 **🥾 Want to set up a Poetry-managed replicable environment?**
@@ -34,7 +34,7 @@ make app-run
 - [Poetry-FastAPI bootstrap template](#poetry-fastapi-bootstrap-template)
   - [🪄 The magic tricks](#-the-magic-tricks)
     - [Dissecting Makefile](#dissecting-makefile)
-    - [Dissecting .python-version](#dissecting-pythonrc)
+    - [Dissecting .python-version](#dissecting-python-version)
   - [👀 What are the extra files?](#-what-are-the-extra-files)
     - [Dissecting Dockerfile](#dissecting-dockerfile)
     - [Dissecting docker-compose.yaml](#dissecting-docker-composeyaml)
@@ -65,20 +65,36 @@ The package-specific configurations are gathered on a single TOML file (Poetry, 
 
 ### Dissecting [.python-version](./.python-version)
 
-- A single entrypoint for changing your build defining, for example, `PYTHON_VERSION=3.11.0`
+- A single entrypoint for changing your build defining, for example, `3.11.3`. Works best algonside with `pyenv`
 
 
-***⚠️ Sections below are a Work in Progress***
 
 ## 👀 What are the extra files?
 
 ### Dissecting [Dockerfile](./Dockerfile)
 
+It consists of a standard 2-layer image. On the first one we install poetry and on the 2nd one we install our requirements and run the app, passing environment variables individually.
+
+**Why a custom entrypoint?**
+
+To properly propagate process signals to the container. As the spawned shell to run our app runs on Bash, we spawns a child process to run node, but signals sent to the parent process are not forwarded to the child processes (a more detailed explanation in found [here](https://www.kaggle.com/code/residentmario/best-practices-for-propagating-signals-on-docker) and [there](https://www.padok.fr/en/blog/docker-processes-container#How_it_should_happen)). 
+
+In order to have a proper signal managmement, we trap and handle `SIGINT` and `SIGTERM`: see [server/entrypoint.sh](server/entrypoint.sh).
 
 ### Dissecting [docker-compose.yaml](./docker-compose.yaml)
 
+We explicitly define an internal network in order for the containers of Mongo and our app to work properly.
+
 
 ### Dissecting [pyproject.toml](./pyproject.toml)
+
+Here we centralise all of the relevant configuration for:
+- Poetry
+- Mypy
+- Ruff
+- isort
+- Black
+- Pytest
 
 ---
 
