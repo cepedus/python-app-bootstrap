@@ -6,7 +6,7 @@ authors = ["Martín Cepeda <mocepeda@uc.cl>"]
 
 [tool.poetry.dependencies]
 python = "~3.11"
-fastapi = "0.95.2"
+fastapi = "0.109.1"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "1.1.1"
